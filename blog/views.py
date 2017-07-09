@@ -12,7 +12,7 @@ def post_list(request):
     """create a view that wil return a lost of posts that were published prior to now"""
     posts = Post.objects.filter(published_date__lte=timezone.now()
             ).order_by('-published_date')
-    return render(request, "blogposts.html", {'posts':posts})
+    return render(request, "blog/blogposts.html", {'posts':posts})
 
 def post_detail(request,id):
     """
@@ -22,14 +22,14 @@ def post_detail(request,id):
     post=get_object_or_404(Post, pk=id)
     post.views+=1  #clock up the number of post views
     post.save()
-    return render(request,"postdetail.html",{'post':post})
+    return render(request,"blog/postdetail.html",{'post':post})
 
 def top_posts(request):
     """get a list of posts and order them by the number of views. Only return the top 5 results.
     Render it to blogposts.html"""
     posts=Post.objects.filter(published_date__lte= timezone.now()
                               ).order_by('-views')[:5]
-    return render(request,"blogposts.html",{'posts':posts})
+    return render(request,"blog/blogposts.html",{'posts':posts})
 
 def new_post(request):
     if request.method=="POST":
@@ -42,7 +42,7 @@ def new_post(request):
             return redirect(post_detail, post.pk)
         else:
             form = BlogPostForm()
-        return render(request, 'blogpostform.html',{'form':form})
+        return render(request, 'blog/blogpostform.html',{'form':form})
 
 def edit_post(request,id):
     post=get_object_or_404(Post, pk=id)
@@ -56,4 +56,4 @@ def edit_post(request,id):
             return redirect(post_detail, post.pk)
         else:
             form=BlogPostForm(instance=post)
-        return render(request,'blogpostform.html',{'form':form})
+        return render(request,'blog/blogpostform.html',{'form':form})
